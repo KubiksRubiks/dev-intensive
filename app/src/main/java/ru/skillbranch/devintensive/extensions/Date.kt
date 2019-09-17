@@ -1,4 +1,4 @@
-package ru.skillbranch.devintensive.extentions
+package ru.skillbranch.devintensive.extensions
 
 import java.text.SimpleDateFormat
 import java.util.*
@@ -24,6 +24,11 @@ fun Date.add(value: Int, units: TimeUnits = TimeUnits.SECOND): Date {
     }
     this.time = time
     return this
+}
+
+fun Date.humanizeDiff(date: Date = Date()): String {
+
+    return date.toString()
 }
 
 enum class TimeUnits(val size: Long) {

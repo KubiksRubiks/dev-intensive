@@ -1,6 +1,7 @@
 package ru.skillbranch.devintensive.utils
 
 import ru.skillbranch.devintensive.extensions.trimOrNull
+import java.util.*
 
 object Utils {
     fun parseFullName(fullName: String?): Pair<String?, String?> {
@@ -14,4 +15,17 @@ object Utils {
         return Pair(firstName, lastName)
     }
 
+    fun toInitials(firstName: String?, lastName: String?): String? {
+        var charFirstName: String? = null
+        var charLastName: String? = null
+
+        charFirstName = firstName.trimOrNull()?.first()?.toString()?.toUpperCase(Locale("ru")) ?: ""
+        charLastName = lastName.trimOrNull()?.first()?.toString()?.toUpperCase(Locale("ru")) ?: ""
+
+        return if(charFirstName.isEmpty() && charLastName.isEmpty()){
+            null
+        } else {
+            "$charFirstName$charLastName"
+        }
+    }
 }

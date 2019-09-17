@@ -22,10 +22,29 @@ object Utils {
         charFirstName = firstName.trimOrNull()?.first()?.toString()?.toUpperCase(Locale("ru")) ?: ""
         charLastName = lastName.trimOrNull()?.first()?.toString()?.toUpperCase(Locale("ru")) ?: ""
 
-        return if(charFirstName.isEmpty() && charLastName.isEmpty()){
+        return if (charFirstName.isEmpty() && charLastName.isEmpty()) {
             null
         } else {
             "$charFirstName$charLastName"
         }
+    }
+
+    fun transliteration(payload: String, divider: String = " "): String {
+        val strBuilder = StringBuilder()
+        payload.toCharArray().forEach {
+            if(it.isWhitespace()){
+                strBuilder.append(divider)
+            } else{
+                if(it.isUpperCase()){
+                    strBuilder.append(
+                        TransLiterators.replaceRusToEngLetter(it.toLowerCase().toString())
+                        .toUpperCase()
+                    )
+                } else {
+                    strBuilder.append(TransLiterators.replaceRusToEngLetter(it.toString()))
+                }
+            }
+        }
+        return strBuilder.toString()
     }
 }

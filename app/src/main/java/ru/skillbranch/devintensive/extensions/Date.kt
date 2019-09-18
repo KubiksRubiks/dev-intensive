@@ -42,7 +42,7 @@ fun Date.add(value: Int, units: TimeUnits = TimeUnits.SECOND): Date {
 
 fun Date.humanizeDiff(date: Date = Date()): String {
     //val diff:Int = ((date.time + 200) / 1000 - (time + 200) / 1000) * 1000
-    val tempTime = date.time
+    val tempTime = ((date.time + 200) / 1000 - (time + 200) / 1000) * 1000
     return if (tempTime >= 0) {
         when (tempTime) {
             in 0.sec..1.sec -> "только что"

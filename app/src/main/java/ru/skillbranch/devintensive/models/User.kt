@@ -19,7 +19,8 @@ data class User(
         lastName = lastName,
         avatar = null
     )
-
+    constructor(id: String) : this(id, "John", "Doe")
+    
     private constructor(builder: Builder) : this(builder.id, builder.firstName, builder.lastName, builder.avatar, builder.rating, builder.respect, builder.lastVisit, builder.isOnline)
 
     init {

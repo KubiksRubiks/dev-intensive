@@ -24,11 +24,11 @@ val Int.asPlurals
 
 val TimeUnits.pluralStrings
     get() = when (this) {
-            TimeUnits.SECOND -> mapOf(ONE to "секунду", FEW to "секунды", MUCH to "секунд")
-            TimeUnits.MINUTE -> mapOf(ONE to "минуту", FEW to "минуты", MUCH to "минут")
-            TimeUnits.HOUR -> mapOf(ONE to "час", FEW to "часа", MUCH to "часов")
-            TimeUnits.DAY -> mapOf(ONE to "день", FEW to "дня", MUCH to "дней")
-        }
+        TimeUnits.SECOND -> mapOf(ONE to "секунду", FEW to "секунды", MUCH to "секунд")
+        TimeUnits.MINUTE -> mapOf(ONE to "минуту", FEW to "минуты", MUCH to "минут")
+        TimeUnits.HOUR -> mapOf(ONE to "час", FEW to "часа", MUCH to "часов")
+        TimeUnits.DAY -> mapOf(ONE to "день", FEW to "дня", MUCH to "дней")
+    }
 
 fun Date.format(pattern: String = "HH:mm:ss dd.MM.yy"): String {
     val dateFormat = SimpleDateFormat(pattern, Locale("ru"))
@@ -70,17 +70,17 @@ fun Date.humanizeDiff(date: Date = Date()): String {
             in (-45).sec..(-1).sec -> "через несколько секунд"
             in (-75).sec..(-45).sec -> "через минуту"
             in (-45).min..(-75).sec -> {
-                val totalValue = (tempTime / MINUTE).toInt()
+                val totalValue = (tempTime * -1 / MINUTE).toInt()
                 "через ${TimeUnits.MINUTE.plural(totalValue)}"
             }
             in (-75).min..(-45).min -> "через час"
             in (-22).hour..(-75).min -> {
-                val totalValue = (tempTime / HOUR).toInt()
+                val totalValue = (tempTime * -1 / HOUR).toInt()
                 "через ${TimeUnits.HOUR.plural(totalValue)}"
             }
             in (-26).hour..(-22).hour -> "через день"
             in (-360).day..(-26).hour -> {
-                val totalValue = (tempTime / DAY).toInt()
+                val totalValue = (tempTime * -1 / DAY).toInt()
                 "через ${TimeUnits.DAY.plural(totalValue)}"
             }
             else -> "более чем через год"
@@ -97,7 +97,7 @@ enum class TimeUnits(val size: Long) {
     fun plural(value: Int) = "$value ${pluralStrings[value.asPlurals]}"
 }
 
-enum class Plurals{
+enum class Plurals {
     ONE,
     FEW,
     MUCH

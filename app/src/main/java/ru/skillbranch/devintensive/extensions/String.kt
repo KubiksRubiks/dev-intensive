@@ -1,7 +1,13 @@
 package ru.skillbranch.devintensive.extensions
 
-fun String?.trimOrNull(): String? {
-    val resultString = this?.trim()
+fun String.truncate(value:Int = 16): String{
+    val appendix = "..."
 
-    return if (resultString?.isEmpty() == true) null else resultString
+    if(this.length>value){
+        var str = dropLast(this.length-value)
+        return (str+appendix)
+    } else {
+        return this
+    }
+
 }

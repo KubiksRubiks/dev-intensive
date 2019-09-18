@@ -1,6 +1,5 @@
 package ru.skillbranch.devintensive.utils
 
-import ru.skillbranch.devintensive.extensions.trimOrNull
 import java.util.*
 
 object Utils {
@@ -46,6 +45,12 @@ object Utils {
             }
         }
         return strBuilder.toString()
+    }
+
+    fun String?.trimOrNull(): String? {
+        val resultString = this?.trim()
+
+        return if (resultString?.isEmpty() == true) null else resultString
     }
 
     private fun replaceRusToEngLetter(letter: String): String = when (letter) {

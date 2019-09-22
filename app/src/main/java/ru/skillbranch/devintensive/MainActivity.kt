@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         val status = savedInstanceState?.getString("STATUS") ?: Bender.Status.NORMAL.name
         val question = savedInstanceState?.getString("QUESTION") ?: Bender.Question.NAME.name
+        val answerCount = savedInstanceState?.getString("ANSWER_COUNT") ?: 0
 
         benderObj = Bender(Bender.Status.valueOf(status), Bender.Question.valueOf(question))
         Log.d("M_MainActivity", "onCreate $status $question")
@@ -79,6 +80,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         outState?.putString("STATUS", benderObj.status.name)
         outState?.putString("QUESTION", benderObj.question.name)
+        outState?.putString("ANSWER_COUNT", benderObj.answerCount.toString())
         Log.d("M_MainActivity", "onSaveInstanceState ${benderObj.status.name} ${benderObj.question.name}")
     }
 

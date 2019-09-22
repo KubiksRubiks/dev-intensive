@@ -2,7 +2,7 @@ package ru.skillbranch.devintensive.models
 
 class Bender(var status: Status = Status.NORMAL, var question: Question = Question.NAME) {
 
-    public var answerCount: Int = 0
+    var answerCount: Int = 0
 
     fun askQuestion(): String = when (question) {
         Question.NAME -> Question.NAME.question

@@ -11,11 +11,11 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.skillbranch.devintensive.extensions.hideKeyboard
 import ru.skillbranch.devintensive.models.Bender
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEditorActionListener {
 
     lateinit var benderImage: ImageView
     lateinit var textTxt: TextView
@@ -94,6 +94,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val (r,g,b) = color
         benderImage.setColorFilter(Color.rgb(r,g,b), PorterDuff.Mode.MULTIPLY)
         textTxt.text = phrase
+        hideKeyboard()
     }
 
     override fun onClick(v: View?) {
@@ -102,4 +103,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    override fun onEditorAction(tv: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+        return if(actionId == EditorInfo.IME_ACTION_DONE){
+            sendMessage()
+            true
+        } else{
+            false
+        }
+    }
 }

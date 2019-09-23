@@ -22,7 +22,6 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         }
     }
 
-
     private fun checkAnswer(answer: String): String {
         val (isValid, answerString) = question.validate(answer)
         return if (isValid) {
@@ -120,7 +119,7 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
                 }
             }
         },
-        IDLE("На этом всеб вопросов больше нет", listOf()) {
+        IDLE("На этом все, вопросов больше нет", listOf()) {
             override fun nextQuestion(): Question = IDLE
             override fun validate(text: String): Pair<Boolean, String> {
                 return true to text

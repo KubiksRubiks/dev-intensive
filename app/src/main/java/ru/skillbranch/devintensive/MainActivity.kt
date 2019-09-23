@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEdito
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.d("M_MainActivity", "onCreate")
 
         benderImage = iv_bender
         textTxt = tv_text
@@ -35,18 +36,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEdito
 
         val status = savedInstanceState?.getString("STATUS") ?: Bender.Status.NORMAL.name
         val question = savedInstanceState?.getString("QUESTION") ?: Bender.Question.NAME.name
-        val answerCount = savedInstanceState?.getInt("ANSWER_COUNT") ?: 0
-
+        val answerCount = savedInstanceState?.getString("ANSWER_CNT") ?: "0"
         benderObj = Bender(Bender.Status.valueOf(status), Bender.Question.valueOf(question))
-        benderObj.answerCount = answerCount
+        benderObj.answerCount = answerCount.toInt()
+
         Log.d("M_MainActivity", "onCreate $status $question")
 
-        val (r,g,b) = benderObj.status.color
-        benderImage.setColorFilter(Color.rgb(r,g,b), PorterDuff.Mode.MULTIPLY)
+        val (r, g, b) = benderObj.status.color
+        benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
 
         textTxt.text = benderObj.askQuestion()
+
         sendBtn.setOnClickListener(this)
-        et_message.setOnEditorActionListener(this)
+        messageEt.setOnEditorActionListener(this)
     }
 
     override fun onRestart() {
@@ -79,36 +81,36 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEdito
         Log.d("M_MainActivity", "onDestroy")
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-
-        outState?.putString("STATUS", benderObj.status.name)
-        outState?.putString("QUESTION", benderObj.question.name)
-        outState?.putInt("ANSWER_COUNT", benderObj.answerCount)
-        Log.d("M_MainActivity", "onSaveInstanceState ${benderObj.status.name} ${benderObj.question.name}")
+    override fun onClick(v: View?) {
+        if (v?.id == R.id.iv_send) {
+            sendAnswer()
+        }
     }
 
-    private fun sendMessage(){
-        val (phrase, color) = benderObj.listenAnswer(messageEt.text.toString().toLowerCase())
+    private fun sendAnswer() {
+        val (phase, color) = benderObj.listenAnswer(messageEt.text.toString())
         messageEt.setText("")
-        val (r,g,b) = color
-        benderImage.setColorFilter(Color.rgb(r,g,b), PorterDuff.Mode.MULTIPLY)
-        textTxt.text = phrase
+        val (r, g, b) = color
+        benderImage.setColorFilter(Color.rgb(r, g, b), PorterDuff.Mode.MULTIPLY)
+        textTxt.text = phase
         hideKeyboard()
     }
 
-    override fun onClick(v: View?) {
-        if(v?.id ==R.id.iv_send){
-           sendMessage()
+    override fun onEditorAction(tv: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+        return if (tv?.id == R.id.et_message && actionId == EditorInfo.IME_ACTION_DONE) {
+            sendAnswer()
+            true
+        } else {
+            false
         }
     }
 
-    override fun onEditorAction(tv: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-        return if(actionId == EditorInfo.IME_ACTION_DONE){
-            sendMessage()
-            true
-        } else{
-            false
-        }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putString("STATUS", benderObj.status.name)
+        outState.putString("QUESTION", benderObj.question.name)
+        outState.putString("ANSWER_CNT", benderObj.answerCount.toString())
+        Log.d("M_MainActivity", "onSaveInstanceSate ${benderObj.status.name} ${benderObj.question.name}")
     }
 }

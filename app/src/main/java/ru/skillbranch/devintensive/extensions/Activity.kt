@@ -30,6 +30,6 @@ fun Activity.isKeyboardOpen(): Boolean {
     return heightDiff > screenHeight / 3
 }
 
-fun Activity.isKeyboardClose():Boolean{
-    return !isKeyboardOpen()
+fun Activity.isKeyboardClosed():Boolean{
+    return this.isKeyboardOpen().not()
 }

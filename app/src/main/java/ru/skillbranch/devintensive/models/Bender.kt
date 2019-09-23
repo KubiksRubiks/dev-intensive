@@ -24,24 +24,19 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
 
 
     private fun checkAnswer(answer: String): String {
-        val (isValid, answerString) = question.validate(answer)
-        return if (isValid) {
-            if (question.answers.contains(answerString)) {
-                question = question.nextQuestion()
-                "Отлично - ты справился"
-            } else {
-                answerCount++
-                if (answerCount > 3) {
-                    answerCount = 0
-                    resetBenderState()
-                    "Это неправильный ответ. Давай все по новой"
-                } else {
-                    status = status.nextStatus()
-                    "Это неправильный ответ"
-                }
-            }
+        return if (question.answers.contains(answer)) {
+            question = question.nextQuestion()
+            "Отлично - ты справился"
         } else {
-            answerString
+            answerCount++
+            if (answerCount > 3) {
+                answerCount = 0
+                resetBenderState()
+                "Это неправильный ответ. Давай все по новой"
+            } else {
+                status = status.nextStatus()
+                "Это неправильный ответ"
+            }
         }
     }
 
@@ -69,65 +64,30 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
     enum class Question(val question: String, val answers: List<String>) {
         NAME("Как меня зовут?", listOf("бендер", "bender")) {
             override fun nextQuestion(): Question = PROFESSION
-            override fun validate(text: String): Pair<Boolean, String> {
-                return if (text.isNotEmpty() && text[0].isUpperCase()) {
-                    true to text.toLowerCase()
-                } else {
-                    false to "Имя должно начинаться с заглавной буквы"
-                }
-            }
+            override fun validate(text: String): Boolean = (text.isNotEmpty() && text[0].isUpperCase())
         },
         PROFESSION("Назови мою профессию?", listOf("сгибальщик", "bender")) {
             override fun nextQuestion(): Question = MATERIAL
-            override fun validate(text: String): Pair<Boolean, String> {
-                return if (text.isNotEmpty() && text[0].isLowerCase()) {
-                    true to text.toLowerCase()
-                } else {
-                    false to "Профессия должна начинаться со строчной буквы"
-                }
-            }
+            override fun validate(text: String): Boolean = text.isNotEmpty() && text[0].isLowerCase()
         },
         MATERIAL("Из чего я сделан?", listOf("металл", "дерево", "metal", "iron", "wood")) {
             override fun nextQuestion(): Question = BDAY
-            override fun validate(text: String): Pair<Boolean, String> {
-                val pattern = Regex("\\d+")
-                return if (pattern.findAll(text).none()) {
-                    true to text.toLowerCase()
-                } else {
-                    false to "Материал не должен содержать цифр"
-                }
-            }
+            override fun validate(text: String): Boolean = Regex("\\d+").findAll(text).none()
         },
         BDAY("Когда меня создали?", listOf("2993")) {
             override fun nextQuestion(): Question = SERIAL
-            override fun validate(text: String): Pair<Boolean, String> {
-                val pattern = Regex("[^\\d]")
-                return if (pattern.findAll(text).none()) {
-                    true to text.toLowerCase()
-                } else {
-                    false to "Год моего рождения должен содержать только цифры"
-                }
-            }
+            override fun validate(text: String): Boolean = Regex("[^\\d]").findAll(text).none()
         },
         SERIAL("Мой серийный номер?", listOf("2716057")) {
             override fun nextQuestion(): Question = IDLE
-            override fun validate(text: String): Pair<Boolean, String> {
-                val pattern = Regex("[^\\d]{7}")
-                return if (pattern.findAll(text).none()) {
-                    true to text.toLowerCase()
-                } else {
-                    false to "Серийный номер содержит только цифры, и их 7"
-                }
-            }
+            override fun validate(text: String): Boolean = Regex("[^\\d]{7}").findAll(text).none()
         },
         IDLE("На этом всеб вопросов больше нет", listOf()) {
             override fun nextQuestion(): Question = IDLE
-            override fun validate(text: String): Pair<Boolean, String> {
-                return true to text
-            }
+            override fun validate(text: String): Boolean = true
         };
 
         abstract fun nextQuestion(): Question
-        abstract fun validate(text: String): Pair<Boolean, String>
+        abstract fun validate(text: String): Boolean
     }
 }

@@ -97,9 +97,28 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEdito
         hideKeyboard()
     }
 
+    private fun makeErrorMessage() {
+        val errorMessage = when(benderObj.question){
+            Bender.Question.NAME -> "Имя должно начинаться с заглавной буквы"
+            Bender.Question.PROFESSION -> "Профессия должна начинаться со строчной буквы"
+            Bender.Question.MATERIAL -> "Материал не должен содержать цифр"
+            Bender.Question.BDAY -> "Год моего рождения должен содержать только цифры"
+            Bender.Question.SERIAL -> "Серийный номер содержит только цифры, и их 7"
+            else -> "На этом все, вопросов больше нет"
+        }
+        textTxt.text = errorMessage + "\n" + benderObj.question.question
+        messageEt.setText("")
+    }
+
+    private fun isAnswerValid(): Boolean {
+        return benderObj.question.validate(messageEt.text.toString())
+    }
+
     override fun onClick(v: View?) {
         if(v?.id ==R.id.iv_send){
-           sendMessage()
+            if (isAnswerValid())
+                sendMessage()
+            else makeErrorMessage()
         }
     }
 

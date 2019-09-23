@@ -112,8 +112,8 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         SERIAL("Мой серийный номер?", listOf("2716057")) {
             override fun nextQuestion(): Question = IDLE
             override fun validate(text: String): Pair<Boolean, String> {
-                val pattern = Regex("[^\\d]{7}")
-                return if (pattern.findAll(text).none()) {
+                val pattern = Regex("[^\\d]")
+                return if (pattern.findAll(text).none() && text.length == 7) {
                     true to text.toLowerCase()
                 } else {
                     false to "Серийный номер содержит только цифры, и их 7"

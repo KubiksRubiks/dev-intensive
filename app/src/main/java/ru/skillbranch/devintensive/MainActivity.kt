@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, TextView.OnEdito
             Bender.Question.MATERIAL -> "Материал не должен содержать цифр"
             Bender.Question.BDAY -> "Год моего рождения должен содержать только цифры"
             Bender.Question.SERIAL -> "Серийный номер содержит только цифры, и их 7"
-            Bender.Question.IDLE -> "На этом все, вопросов больше нет"
+            else -> "На этом все, вопросов больше нет"
         }
         textTxt.text = errorMessage + "\n" + benderObj.question.question
         messageEt.setText("")

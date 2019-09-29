@@ -1,20 +1,12 @@
 package ru.skillbranch.devintensive.extensions
 
-fun String.truncate(value: Int = 16): String {
-    val appendix = "..."
-
-    if (this.length > value) {
-        var str = dropLast(this.length - value)
-        return (str + appendix)
-    } else {
-        return this
-    }
+fun String.truncate(length: Int = 16): String{
+    val trimmedMes = this.trim()
+    return if (trimmedMes.length <= length) trimmedMes else trimmedMes.substring(0, length).trim() + "..."
 }
 
-fun String.stripHtml(): String {
-    return this
-        .replace(Regex("<[^>]*>"), "") //удаляет HTML-теги
-        .replace(Regex("\\s+"), " ") //удаляет пустые символы (пробелы) между словами если их больше 1
-        .replace(Regex("[&'\"]"), "") //удаляет html escape последовательности ("& < > ' "")
-
+fun String.stripHtml(): String{
+    val htmlRegex = Regex("(<.*?>)|(&[^ а-я]{1,4}?;)")
+    val spaceRegex = Regex(" {2,}")
+    return this.replace(htmlRegex, "").replace(spaceRegex, " ")
 }

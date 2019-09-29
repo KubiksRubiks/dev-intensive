@@ -3,40 +3,25 @@ package ru.skillbranch.devintensive.extensions
 import android.app.Activity
 import android.content.Context
 import android.graphics.Rect
-import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import kotlin.math.roundToInt
+import ru.skillbranch.devintensive.utils.Utils.convertDpToPx
 
-
-/** * Hides the soft keyboard  */
-fun Activity.hideKeyboard() {
+fun Activity.hideKeyboard(){
     val focus = this.currentFocus
     focus?.let {
-        (getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)?.let {
-            it.hideSoftInputFromWindow(focus.windowToken, 0)
-        }
+        (getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)?.
+            hideSoftInputFromWindow(focus.windowToken, 0)
     }
 }
 
-fun Activity.getRootView(): View {
-    return findViewById(android.R.id.content)
-}
-
-fun Context.convertDpToPx(dp: Float): Float {
-    return TypedValue.applyDimension(
-        TypedValue.COMPLEX_UNIT_DIP,
-        dp,
-        this.resources.displayMetrics
-    )
-}
-
-fun Activity.isKeyboardOpen(): Boolean {
-    val rootView = this.getRootView()
+fun Activity.isKeyboardOpen(): Boolean{
+    val rootView = findViewById<View>(android.R.id.content)
     val visibleBounds = Rect()
     rootView.getWindowVisibleDisplayFrame(visibleBounds)
-    val heightDiff = getRootView().height - visibleBounds.height()
-    val marginOfError = this.convertDpToPx(50F).roundToInt()
+    val heightDiff = rootView.height - visibleBounds.height()
+    val marginOfError = convertDpToPx(this, 50F)
+
     return heightDiff > marginOfError
 }
 

@@ -1,9 +1,9 @@
 package ru.skillbranch.devintensive.models
 
-class Chat(
+class Chat (
     val id: String,
-    var members: MutableList<User> = mutableListOf(),
-    var messegs: MutableList<BaseMessage> = mutableListOf()
-) {
+    val members: MutableList<User> = mutableListOf(),
+    val messages: MutableList<BaseMessage> = mutableListOf()
+){
 
 }

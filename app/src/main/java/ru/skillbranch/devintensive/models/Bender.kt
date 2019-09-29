@@ -2,9 +2,9 @@ package ru.skillbranch.devintensive.models
 
 class Bender(var status: Status = Status.NORMAL, var question: Question = Question.NAME) {
 
-    var answerCount: Int = 0
+    var answerCount = 0
 
-    fun askQuestion(): String = when (question) {
+    fun askQuestion(): String =  when(question) {
         Question.NAME -> Question.NAME.question
         Question.PROFESSION -> Question.PROFESSION.question
         Question.MATERIAL -> Question.MATERIAL.question
@@ -14,40 +14,33 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
     }
 
     fun listenAnswer(answer: String): Pair<String, Triple<Int, Int, Int>> {
-        return when (question) {
+        return when(question) {
             Question.IDLE -> question.question to status.color
             else -> {
-                "${checkAnswer(answer)}\n${question.question}" to status.color
-            }
-        }
-    }
-
-    private fun checkAnswer(answer: String): String {
-        val (isValid, answerString) = question.validate(answer)
-        return if (isValid) {
-            if (question.answers.contains(answerString)) {
-                question = question.nextQuestion()
-                "Отлично - ты справился"
-            } else {
-                answerCount++
-                if (answerCount > 3) {
-                    answerCount = 0
-                    resetBenderState()
-                    "Это неправильный ответ. Давай все по новой"
+                val (answerResult, answerString) = question.validate(answer)
+                if (answerResult) {
+                    if (question.answers.contains(answerString)) {
+                        question = question.nextQuestion()
+                        "Отлично - ты справился\n${question.question}" to status.color
+                    } else {
+                        answerCount++
+                        if (answerCount > 3) {
+                            answerCount = 0
+                            status = Status.NORMAL
+                            question = Question.NAME
+                            "Это неправильный ответ. Давай все по новой\n${question.question}" to status.color
+                        } else {
+                            status = status.nextStatus()
+                            "Это неправильный ответ\n${question.question}" to status.color
+                        }
+                    }
                 } else {
-                    status = status.nextStatus()
-                    "Это неправильный ответ"
+                    "$answerString\n${question.question}" to status.color
                 }
             }
-        } else {
-            answerString
         }
     }
 
-    private fun resetBenderState() {
-        status = Status.NORMAL
-        question = Question.NAME
-    }
 
     enum class Status(val color: Triple<Int, Int, Int>) {
         NORMAL(Triple(255, 255, 255)),
@@ -61,7 +54,6 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
             } else {
                 values()[0]
             }
-
         }
     }
 
@@ -89,8 +81,8 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         MATERIAL("Из чего я сделан?", listOf("металл", "дерево", "metal", "iron", "wood")) {
             override fun nextQuestion(): Question = BDAY
             override fun validate(text: String): Pair<Boolean, String> {
-                val pattern = Regex("\\d+")
-                return if (pattern.findAll(text).none()) {
+                val reg = Regex("\\d+")
+                return if (reg.findAll(text).none()) {
                     true to text.toLowerCase()
                 } else {
                     false to "Материал не должен содержать цифр"
@@ -100,26 +92,26 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         BDAY("Когда меня создали?", listOf("2993")) {
             override fun nextQuestion(): Question = SERIAL
             override fun validate(text: String): Pair<Boolean, String> {
-                val pattern = Regex("[^\\d]")
-                return if (pattern.findAll(text).none()) {
+                val reg = Regex("\\D+")
+                return if (reg.findAll(text).none()) {
                     true to text.toLowerCase()
                 } else {
                     false to "Год моего рождения должен содержать только цифры"
                 }
             }
         },
-        SERIAL("Мой серийный номер?", listOf("2716057")) {
+        SERIAL("Мой серийный номер?", listOf("2716057"))  {
             override fun nextQuestion(): Question = IDLE
             override fun validate(text: String): Pair<Boolean, String> {
-                val pattern = Regex("[^\\d]")
-                return if (pattern.findAll(text).none() && text.length == 7) {
+                val reg = Regex("\\D+")
+                return if (reg.findAll(text).none() && text.length == 7) {
                     true to text.toLowerCase()
                 } else {
                     false to "Серийный номер содержит только цифры, и их 7"
                 }
             }
         },
-        IDLE("На этом все, вопросов больше нет", listOf()) {
+        IDLE("На этом все, вопросов больше нет", listOf())  {
             override fun nextQuestion(): Question = IDLE
             override fun validate(text: String): Pair<Boolean, String> {
                 return true to text
@@ -129,4 +121,5 @@ class Bender(var status: Status = Status.NORMAL, var question: Question = Questi
         abstract fun nextQuestion(): Question
         abstract fun validate(text: String): Pair<Boolean, String>
     }
+
 }

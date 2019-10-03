@@ -47,7 +47,7 @@ class CircleImageView @JvmOverloads constructor (context: Context, attrs: Attrib
     @Dimension(unit = DP)
     fun getBorderWidth(): Int = Utils.convertPxToDp(context, borderWidth)
 
-    @Dimension(unit = DP)
+    //0@Dimension(unit = DP)
     fun setBorderWidth(dp: Int) {
         borderWidth = Utils.convertDpToPx(context, dp.toFloat())
         this.invalidate()

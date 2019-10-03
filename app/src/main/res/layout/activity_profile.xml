@@ -166,7 +166,7 @@
     <View android:layout_width="match_parent"
           android:layout_height="1dp"
           android:background="?attr/colorDivider"
-          android:layout_marginStart="@dimen/space_maximum_72"/>
+          android:layout_marginStart="@dimen/spacing_maximum_72"/>
 
     <LinearLayout style="@style/Profile.InfoItem"
                   android:layout_width="match_parent"
@@ -195,7 +195,7 @@
     <View android:layout_width="match_parent"
           android:layout_height="1dp"
           android:background="?attr/colorDivider"
-          android:layout_marginStart="@dimen/space_maximum_72"/>
+          android:layout_marginStart="@dimen/spacing_maximum_72"/>
 
     <LinearLayout style="@style/Profile.InfoItem"
                   android:layout_width="match_parent"

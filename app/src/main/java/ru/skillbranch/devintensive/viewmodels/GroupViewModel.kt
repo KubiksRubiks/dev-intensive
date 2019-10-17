@@ -10,51 +10,58 @@ import ru.skillbranch.devintensive.repositories.GroupRepository
 
 class GroupViewModel : ViewModel() {
 
-    private val query = mutableLiveData("")
     private val groupRepository = GroupRepository
+
+    private val query = mutableLiveData("")
     private val userItems = mutableLiveData(loadUsers())
-    private val selectedItems =
-        Transformations.map(userItems) { users -> users.filter { it.isSelected } }
+    private val selectedItems = Transformations.map(userItems) { users ->
+        users.filter { it.isSelected }
+    }
 
     fun getUserData(): LiveData<List<UserItem>> {
         val result = MediatorLiveData<List<UserItem>>()
 
-        val filterF = {
+        val filter = {
             val queryStr = query.value!!
             val users = userItems.value!!
 
-            result.value = if (queryStr.isEmpty()) users
-            else users.filter { it.fullName.contains(queryStr, true) }
+            result.value =
+                if (!queryStr.isEmpty())
+                    users.filter { it.fullName.contains(queryStr, true) }
+                else users
         }
 
-        result.addSource(userItems) { filterF.invoke() }
-        result.addSource(query) { filterF.invoke() }
+        result.addSource(userItems) { filter.invoke() }
+        result.addSource(query) { filter.invoke() }
 
-        return userItems
+        return result
     }
 
     fun getSelectedData(): LiveData<List<UserItem>> = selectedItems
 
     fun handleSelectedItem(userId: String) {
         userItems.value = userItems.value!!.map {
-            if (it.id == userId) it.copy(isSelected = !it.isSelected)
+            if (it.id == userId)
+                it.copy(isSelected = !it.isSelected)
             else it
         }
     }
 
     fun handleRemoveChip(userId: String) {
         userItems.value = userItems.value!!.map {
-            if (it.id == userId) it.copy(isSelected = false)
+            if (it.id == userId)
+                it.copy(isSelected = false)
             else it
         }
     }
 
-    fun handleSearchQuery(text: String) {
+    fun handleSearchQuery(text: String?) {
         query.value = text
     }
 
+    fun handleCreateGroup() {
+        groupRepository.createChat(selectedItems.value!!)
+    }
+
     private fun loadUsers(): List<UserItem> = groupRepository.loadUsers().map { it.toUserItem() }
-        fun handleCreateGroup(){
-            groupRepository.createChat(selectedItems.value!!)
-        }
 }

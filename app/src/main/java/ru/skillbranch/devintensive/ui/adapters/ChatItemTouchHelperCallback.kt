@@ -11,8 +11,8 @@ import ru.skillbranch.devintensive.R
 import ru.skillbranch.devintensive.models.data.ChatItem
 
 class ChatItemTouchHelperCallback(
-    val adapter: ChatAdapter,
-    val swipeListener: (ChatItem) -> Unit
+    private val adapter: ChatAdapter,
+    private val swipeListener: (ChatItem) -> Unit
 ) : ItemTouchHelper.Callback() {
 
     private val bgRect = RectF()
@@ -34,9 +34,7 @@ class ChatItemTouchHelperCallback(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
-    ): Boolean {
-        return false
-    }
+    ): Boolean = false
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         swipeListener.invoke(adapter.items[viewHolder.adapterPosition])
@@ -100,6 +98,8 @@ class ChatItemTouchHelperCallback(
         with(bgPaint) {
             color = itemView.resources.getColor(R.color.color_primary_dark, itemView.context.theme)
         }
+
+        canvas.drawRect(bgRect, bgPaint)
     }
 }
 

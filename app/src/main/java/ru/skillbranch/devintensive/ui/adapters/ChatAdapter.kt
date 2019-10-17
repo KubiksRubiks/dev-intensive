@@ -45,10 +45,6 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) :
             GROUP_TYPE -> GroupViewHolder(inflater.inflate(R.layout.item_chat_group, parent, false))
             else -> SingleViewHolder(inflater.inflate(R.layout.item_chat_single, parent, false))
         }
-        /*
-        val convertView = inflater.inflate(R.layout.item_chat_single, parent, false)
-        Log.d("M_ChatAdapter", "onCreateViewHolder")
-        return SingleViewHolder(convertView)*/
     }
 
     override fun getItemCount(): Int = items.size
@@ -105,8 +101,7 @@ class ChatAdapter(val listener: (ChatItem) -> Unit) :
 
         override fun bind(item: ChatItem, listener: (ChatItem) -> Unit) {
             if (item == null) {
-                Glide.with(itemView)
-                    .clear(aiv_avatar_single)
+                Glide.with(itemView).clear(aiv_avatar_single)
                 aiv_avatar_single.setInitials(item.initials)
             } else {
                 Glide.with(itemView)

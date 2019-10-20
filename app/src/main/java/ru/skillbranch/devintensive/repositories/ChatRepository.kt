@@ -10,16 +10,16 @@ object ChatRepository {
 
     fun loadChats(): MutableLiveData<List<Chat>> = chats
 
-    fun update(chat: Chat){
+    fun update(chat: Chat) {
         val copy = chats.value!!.toMutableList()
-        val ind = chats.value!!.indexOfFirst { it.id==chat.id }
-        if(ind == -1) return
+        val ind = chats.value!!.indexOfFirst { it.id == chat.id }
+        if (ind == -1) return
         copy[ind] = chat
         chats.value = copy
     }
 
-    fun find(chatId:String):Chat?{
-        val ind = chats.value!!.indexOfFirst { it.id==chatId }
+    fun find(chatId: String): Chat? {
+        val ind = chats.value!!.indexOfFirst { it.id == chatId }
         return chats.value!!.getOrNull(ind)
     }
 }
